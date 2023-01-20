@@ -14,15 +14,16 @@ import {
 
 import Metrics from './src/config/metrics';
 
-export default function App() {
+export default function App(variant, text) {
+
 
     return (
         <View style={Styles.container}>
             <Text>Hello</Text>
             <TouchableOpacity style={Styles.disabledBtn} activeOpacity={0.9}>
-                <Text style={Styles.BtnText}>Continue</Text>
+                <Text style={Styles.BtnText}>{text}</Text>
             </TouchableOpacity>
-            <View style={{ margin: 10 }}></View>
+            {/* <View style={{ margin: 10 }}></View>
             <TouchableOpacity style={Styles.activeBtn} activeOpacity={0.7}>
                 <Text style={Styles.BtnText}>Continue</Text>
             </TouchableOpacity>
@@ -35,7 +36,7 @@ export default function App() {
             <View style={{ margin: 10 }}></View>
             <TouchableOpacity style={Styles.inactiveButton} activeOpacity={0.9}>
                 <Text style={Styles.OutlineBtnText}>Continue</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
         </View>
     )
 

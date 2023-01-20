@@ -4,7 +4,7 @@ import { Text, View } from "react-native";
 
 
 import Home from "./components/home";
-import Buttons from "./components/buttons";
+import Buttons from "./components/Buttons";
 
 function HomeScreen() {
     return (
