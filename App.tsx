@@ -5,114 +5,212 @@
  * @format
  */
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
+import React, { useState } from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
   Text,
-  useColorScheme,
   View,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  VirtualizedList
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+const arrowLeft = require("./src/icons/chevron-left.png")
+const arrowDown = require("./src/icons/arrowDown.png")
+const searchIcon = require("./src/icons/search.png")
 
-type SectionProps = PropsWithChildren<{
+const list = [
+  {
+    id: 1,
+    title: "Warri",
+  },
+  {
+    id: 2,
+    title: "Aba",
+  },
+  {
+    id: 3,
+    title: "Port Harcourt",
+  },
+  {
+    id: 4,
+    title: "Nembe",
+  },
+  {
+    id: 5,
+    title: "warri",
+  },
+  {
+    id: 6,
+    title: "Lagos",
+  },
+  {
+    id: 7,
+    title: "Kogi",
+  },
+  {
+    id: 8,
+    title: "warri",
+  },
+  {
+    id: 9,
+    title: "Lagos",
+  },
+  {
+    id: 10,
+    title: "Kogi",
+  },
+]
+
+type ItemData = {
+  id: string;
   title: string;
-}>;
+};
 
-function Section({children, title}: SectionProps): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
+const getItem = (data, index) => {
+  return data[index]
 }
 
-function App(): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+type ItemProps = {
+  title: string;
+};
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+const Item = ({ title }: ItemProps) => (
+  <View style={Styles.item}>
+    <Text style={Styles.title}>{title}</Text>
+  </View>
+);
 
+
+const ListHeader = ({ Pressed }) => {
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
+    <View style={{ marginTop: 50, marginBottom: 10, alignSelf: "stretch" }}>
+      <TouchableOpacity onPress={() => {
+        Pressed()
+      }}
+        style={{ left: 10, marginBottom: 10 }}
+      >
+        <Image source={arrowLeft} />
+      </TouchableOpacity>
+
+      <View style={Styles.headerCoat}>
+        <View style={{ flexDirection: "row", margin: 0 }}>
+          <Image source={searchIcon} style={{ zIndex: 1, left: 30, alignSelf: "center", height: 20, width: 20, margin: 0 }} />
+          <TextInput style={Styles.input}
+            placeholder={"Search State"}
+          />
         </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
+
+      </View>
+
+    </View>
+  )
 }
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+export default function App() {
+  const [showList, setList] = useState(false)
+  Pressed = () => {
+    setList(false)
+  }
 
-export default App;
+  return (
+    <View style={Styles.container}>
+      {
+        showList ?
+          <VirtualizedList
+            data={list}
+            initialNumToRender={4}
+            renderItem={({ item }) => <Item title={item.title} />}
+            keyExtractor={item => item.id}
+            getItemCount={list => list.length}
+            getItem={getItem}
+            ListHeaderComponent={<ListHeader Pressed={Pressed} />}
+          />
+          :
+
+          <TouchableOpacity style={{ flexDirection: "row", alignItems: "center" }}
+            onPress={() => {
+              setList(true);
+            }}
+            activeOpacity={0.8} >
+            <View style={Styles.coat} >
+              <Text style={Styles.selectText}>Select State</Text>
+            </View>
+            <Image source={arrowDown} style={Styles.selectIcon} />
+
+          </TouchableOpacity>
+      }
+
+
+
+    </View>
+  )
+
+
+}
+
+const Styles = {
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#F8F9FB",
+
+  },
+  coat: {
+    backgroundColor: "#FFFFFF",
+    width: 327,
+    height: 52,
+    borderRadius: 8,
+    fontSize: 18,
+    paddingLeft: 10,
+    paddingRight: 10,
+    borderWidth: 2,
+    borderColor: "#E3E5E5",
+    alignItems: "flex-start",
+    justifyContent: "center",
+    // alignSelf: "center"
+  },
+  selectText: {
+    justifySelf: "flex-start",
+    fontSize: 16,
+    color: "#D1D1D1",
+  },
+  selectIcon: {
+    zIndex: 1,
+    right: 30
+  },
+  item: {
+    height: 45,
+    marginTop: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderColor: "#E3E5E5",
+    // alignSelf: "stretch",
+    width: 330,
+    marginLeft: 20,
+    marginRight: 20
+  },
+  title: {
+    color: "#6D6D6D",
+    fontSize: 16,
+    alignSelf: "flex-start"
+  },
+  headerCoat: {
+    // width: 328,
+  },
+  input: {
+    backgroundColor: "#FFFFFF",
+    width: 327,
+    // alignSelf: "stretch",
+    height: 52,
+    borderRadius: 8,
+    fontSize: 16,
+    borderWidth: 2,
+    borderColor: "#E3E5E5",
+    paddingLeft: 40,
+    paddingRight: 10
+  },
+
+}
